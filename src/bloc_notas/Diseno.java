@@ -37,8 +37,6 @@ public class Diseno extends javax.swing.JFrame {
         errores=new DefaultListModel();
         lista_errores.setModel(errores);
         
-//        numeroLinea= new NumeroLinea(jTextArea1);
-//        jScrollPane1.setRowHeaderView(numeroLinea);
         
     }
 
@@ -63,11 +61,10 @@ public class Diseno extends javax.swing.JFrame {
         btn_asignacion_variables = new javax.swing.JButton();
         btn_numeros_reales = new javax.swing.JButton();
         btn_variableNombre = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
-        btn_racionales = new javax.swing.JButton();
-        btn_01 = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         lista_errores = new javax.swing.JList<>();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        jTextArea2 = new javax.swing.JTextArea();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
@@ -75,16 +72,6 @@ public class Diseno extends javax.swing.JFrame {
         jMenuItem3 = new javax.swing.JMenuItem();
         jMenuItem10 = new javax.swing.JMenuItem();
         jMenuItem4 = new javax.swing.JMenuItem();
-        jMenu2 = new javax.swing.JMenu();
-        btn_fuente = new javax.swing.JMenuItem();
-        btn_color = new javax.swing.JMenuItem();
-        jMenu3 = new javax.swing.JMenu();
-        jMenuItem6 = new javax.swing.JMenuItem();
-        jMenuItem7 = new javax.swing.JMenuItem();
-        jMenuItem8 = new javax.swing.JMenuItem();
-        jMenuItem12 = new javax.swing.JMenuItem();
-        jMenuItem11 = new javax.swing.JMenuItem();
-        jmenu_binario = new javax.swing.JMenuItem();
 
         btnc_nuevo.setFont(new java.awt.Font("Century Gothic", 1, 12)); // NOI18N
         btnc_nuevo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imag/agregar-archivo.png"))); // NOI18N
@@ -146,7 +133,7 @@ public class Diseno extends javax.swing.JFrame {
 
         jTextArea1.setBackground(new java.awt.Color(49, 66, 82));
         jTextArea1.setColumns(20);
-        jTextArea1.setFont(new java.awt.Font("Century Gothic", 0, 16)); // NOI18N
+        jTextArea1.setFont(new java.awt.Font("Century Gothic", 0, 24)); // NOI18N
         jTextArea1.setForeground(new java.awt.Color(255, 255, 255));
         jTextArea1.setRows(5);
         jTextArea1.setComponentPopupMenu(jPopupMenu1);
@@ -243,46 +230,16 @@ public class Diseno extends javax.swing.JFrame {
         });
         jToolBar1.add(btn_variableNombre);
 
-        jButton1.setText("P2");
-        jButton1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        jButton1.setFocusable(false);
-        jButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-        jToolBar1.add(jButton1);
-
-        btn_racionales.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imag/letra-r.png"))); // NOI18N
-        btn_racionales.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btn_racionales.setFocusable(false);
-        btn_racionales.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        btn_racionales.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        btn_racionales.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_racionalesActionPerformed(evt);
-            }
-        });
-        jToolBar1.add(btn_racionales);
-
-        btn_01.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imag/codigo-binario.png"))); // NOI18N
-        btn_01.setBorder(null);
-        btn_01.setFocusable(false);
-        btn_01.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        btn_01.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        btn_01.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_01ActionPerformed(evt);
-            }
-        });
-        jToolBar1.add(btn_01);
-
+        lista_errores.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jScrollPane2.setViewportView(lista_errores);
 
+        jTextArea2.setColumns(20);
+        jTextArea2.setFont(new java.awt.Font("Century Gothic", 0, 24)); // NOI18N
+        jTextArea2.setRows(5);
+        jScrollPane3.setViewportView(jTextArea2);
+
         jMenuBar1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jMenuBar1.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
+        jMenuBar1.setFont(new java.awt.Font("Century Gothic", 0, 36)); // NOI18N
 
         jMenu1.setText("Archivo");
 
@@ -338,95 +295,27 @@ public class Diseno extends javax.swing.JFrame {
 
         jMenuBar1.add(jMenu1);
 
-        jMenu2.setText("Edición");
-
-        btn_fuente.setText("Fuente");
-        jMenu2.add(btn_fuente);
-
-        btn_color.setText("Color");
-        btn_color.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_colorActionPerformed(evt);
-            }
-        });
-        jMenu2.add(btn_color);
-
-        jMenuBar1.add(jMenu2);
-
-        jMenu3.setText("Automatas");
-
-        jMenuItem6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imag/boton-de-reproduccion.png"))); // NOI18N
-        jMenuItem6.setText("Asignación Variables");
-        jMenuItem6.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem6ActionPerformed(evt);
-            }
-        });
-        jMenu3.add(jMenuItem6);
-
-        jMenuItem7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imag/letra-n.png"))); // NOI18N
-        jMenuItem7.setText("Numeros Reales");
-        jMenuItem7.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem7ActionPerformed(evt);
-            }
-        });
-        jMenu3.add(jMenuItem7);
-
-        jMenuItem8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imag/jugar (1).png"))); // NOI18N
-        jMenuItem8.setText("Nombre de Variables");
-        jMenuItem8.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem8ActionPerformed(evt);
-            }
-        });
-        jMenu3.add(jMenuItem8);
-
-        jMenuItem12.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imag/play.png"))); // NOI18N
-        jMenuItem12.setText("Segundo Parcial");
-        jMenuItem12.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem12ActionPerformed(evt);
-            }
-        });
-        jMenu3.add(jMenuItem12);
-
-        jMenuItem11.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imag/letra-r.png"))); // NOI18N
-        jMenuItem11.setText("Numeros Racionales");
-        jMenuItem11.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem11ActionPerformed(evt);
-            }
-        });
-        jMenu3.add(jMenuItem11);
-
-        jmenu_binario.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imag/codigo-binario.png"))); // NOI18N
-        jmenu_binario.setText("Automata Binario");
-        jmenu_binario.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jmenu_binarioActionPerformed(evt);
-            }
-        });
-        jMenu3.add(jmenu_binario);
-
-        jMenuBar1.add(jMenu3);
-
         setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1309, Short.MAX_VALUE)
             .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jScrollPane2)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 1309, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jScrollPane1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 653, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, 27, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 374, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 372, Short.MAX_VALUE)
+                    .addComponent(jScrollPane3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -732,15 +621,6 @@ public void nuevo(){
         }
     }//GEN-LAST:event_btnc_salirActionPerformed
 
-    private void btn_colorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_colorActionPerformed
-//       JColorChooser selectColor=new JColorChooser();
-//       Color jColor;
-//        if (jColor=JColorChooser.showDialog(this,"Selecionar Color",jcolor)!=null) {
-//            selectColor=jColor;
-//            jTextArea1.setForeground(selectColor);
-//        }
-    }//GEN-LAST:event_btn_colorActionPerformed
-
     private void btn_asignacion_variablesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_asignacion_variablesActionPerformed
        int todo=lista_errores.getSelectedIndex();//Limpia la lista
         errores.removeAllElements();//Limpia la lista
@@ -887,64 +767,6 @@ public void nuevo(){
         
     }//GEN-LAST:event_btn_variableNombreActionPerformed
 
-    private void jMenuItem8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem8ActionPerformed
-        // SUB-MENU A3
-        // TERCER AUTOMATA
-        int todo=lista_errores.getSelectedIndex();//Limpia la lista
-        errores.removeAllElements();//Limpia la lista
-        // AUTOMATA ASIGNACION VARIABLE
-        
-        String texto=jTextArea1.getText();
-        String[] partes=texto.split("\n");
-        
-        for (int i = 0;i<partes.length; i++) {
-            
-            texto=partes[i].replaceAll("\\s","");//QUITA LOS ESPACIOS
-            //errores.addElement("Partes"+partes[i]);
-            AsignacionVariable(texto,i+1);
-        }
-    }//GEN-LAST:event_jMenuItem8ActionPerformed
-
-    private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
-        // SUB-MENU A2 NREALES
-        int todo=lista_errores.getSelectedIndex();//Limpia la lista
-        errores.removeAllElements();//Limpia la lista
-        // AUTOMATA NUMERO REAL
-        
-        String texto=jTextArea1.getText();
-        String[] partes=texto.split("\n");
-        
-        for (int i = 0;i<partes.length; i++) {
-            
-            texto=partes[i].replaceAll("\\s","");//QUITA LOS ESPACIOS
-            //errores.addElement("Partes"+partes[i]);
-            NumeroReal(texto,i+1);
-        }
-        
-    }//GEN-LAST:event_jMenuItem7ActionPerformed
-
-    private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
-        // SUB-MENU AUTOMATA1
-        int todo=lista_errores.getSelectedIndex();//Limpia la lista
-        errores.removeAllElements();//Limpia la lista
-        // AUTOMATA ASIGNACION DE VARIABLES
-        
-        String texto=jTextArea1.getText();
-        //texto=texto.replaceAll(";","");//QUITA LOS ;
-        //texto=texto.replaceAll("int","");//QUITA LOS INT
-        
-        String[] partes=texto.split("\n");
-        
-        
-        for (int i = 0;i<partes.length; i++) {
-            
-            texto=partes[i].replaceAll("\\s","");//QUITA LOS ESPACIOS
-            //texto=texto.replaceFirst("=","");//QUITA LOS IGUALES
-        
-            run(texto,i+1);
-        }
-    }//GEN-LAST:event_jMenuItem6ActionPerformed
-
     private void jMenuItem10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem10ActionPerformed
         
         // SUB-MENU  GUARDAR_COMO
@@ -954,107 +776,6 @@ public void nuevo(){
             System.out.println("Error al guardar boton");
         }
     }//GEN-LAST:event_jMenuItem10ActionPerformed
-
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-         // SUB-MENU A4
-   
-        int todo=lista_errores.getSelectedIndex();//Limpia la lista
-        errores.removeAllElements();//Limpia la lista
-        // AUTOMATA ASIGNACION VARIABLE
-        
-        String texto=jTextArea1.getText();
-        String[] partes=texto.split("\n");
-        
-        for (int i = 0;i<partes.length; i++) {
-            
-            texto=partes[i].replaceAll("\\s","");//QUITA LOS ESPACIOS
-           
-            SegundoParcial(texto,i+1);
-        }
-    }//GEN-LAST:event_jButton1ActionPerformed
-
-    private void btn_racionalesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_racionalesActionPerformed
-        // AUTOMALA NUMEROS RACIONALES
-        int todo=lista_errores.getSelectedIndex();//Limpia la lista
-        errores.removeAllElements();//Limpia la lista
-        String texto=jTextArea1.getText();
-        String[] partes=texto.split("\n");
-        
-        for (int i = 0;i<partes.length; i++) {
-            
-            texto=partes[i].replaceAll("\\s","");//QUITA LOS ESPACIOS
-           
-            numeros_racionales(texto,i+1);
-        }
-        
-    }//GEN-LAST:event_btn_racionalesActionPerformed
-
-    private void jMenuItem11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem11ActionPerformed
-        // SUB-MENU NUMEROS RACIONALES
-        int todo=lista_errores.getSelectedIndex();//Limpia la lista
-        errores.removeAllElements();//Limpia la lista
-        String texto=jTextArea1.getText();
-        String[] partes=texto.split("\n");
-        
-        for (int i = 0;i<partes.length; i++) {
-            
-            texto=partes[i].replaceAll("\\s","");//QUITA LOS ESPACIOS
-            numeros_racionales(texto,i+1);
-        }
-        
-    }//GEN-LAST:event_jMenuItem11ActionPerformed
-
-    private void jMenuItem12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem12ActionPerformed
-        // SEGUNDO PARCIAL
-        int todo=lista_errores.getSelectedIndex();//Limpia la lista
-        errores.removeAllElements();//Limpia la lista
-        // AUTOMATA ASIGNACION VARIABLE
-        
-        String texto=jTextArea1.getText();
-        String[] partes=texto.split("\n");
-        
-        for (int i = 0;i<partes.length; i++) {
-            
-            texto=partes[i].replaceAll("\\s","");//QUITA LOS ESPACIOS
-           
-            SegundoParcial(texto,i+1);
-        }
-        
-    }//GEN-LAST:event_jMenuItem12ActionPerformed
-
-    private void btn_01ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_01ActionPerformed
-        // AUTOMATA DE 0S Y 1S
-        int todo=lista_errores.getSelectedIndex();//Limpia la lista
-        errores.removeAllElements();//Limpia la lista
-        
-        String texto=jTextArea1.getText();
-        String[] partes=texto.split("\n");
-        
-        for (int i = 0;i<partes.length; i++) {
-            
-            texto=partes[i].replaceAll("\\s","");//QUITA LOS ESPACIOS
-           
-            binario(texto,i+1);
-        }
-        
-    }//GEN-LAST:event_btn_01ActionPerformed
-
-    private void jmenu_binarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmenu_binarioActionPerformed
-        // MENU AUTOMATA BINARIO
-        int todo=lista_errores.getSelectedIndex();//Limpia la lista
-        errores.removeAllElements();//Limpia la lista
-        
-        String texto=jTextArea1.getText();
-        String[] partes=texto.split("\n");
-        
-        for (int i = 0;i<partes.length; i++) {
-            
-            texto=partes[i].replaceAll("\\s","");//QUITA LOS ESPACIOS
-           
-            binario(texto,i+1);
-        }
-    }//GEN-LAST:event_jmenu_binarioActionPerformed
     
     public void binario(String texto,int linea){
         int Estado=0,n=0;
@@ -1479,44 +1200,33 @@ public void nuevo(){
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btn_01;
     private javax.swing.JButton btn_abrir;
     private javax.swing.JButton btn_asignacion_variables;
-    private javax.swing.JMenuItem btn_color;
-    private javax.swing.JMenuItem btn_fuente;
     private javax.swing.JButton btn_guardar;
     private javax.swing.JButton btn_guardarcomo;
     private javax.swing.JButton btn_nuevo;
     private javax.swing.JButton btn_numeros_reales;
-    private javax.swing.JButton btn_racionales;
     private javax.swing.JButton btn_variableNombre;
     private javax.swing.JMenuItem btnc_abrir;
     private javax.swing.JMenuItem btnc_guardar;
     private javax.swing.JMenuItem btnc_nuevo;
     private javax.swing.JMenuItem btnc_salir;
-    private javax.swing.JButton jButton1;
     private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu2;
-    private javax.swing.JMenu jMenu3;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem10;
-    private javax.swing.JMenuItem jMenuItem11;
-    private javax.swing.JMenuItem jMenuItem12;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem5;
-    private javax.swing.JMenuItem jMenuItem6;
-    private javax.swing.JMenuItem jMenuItem7;
-    private javax.swing.JMenuItem jMenuItem8;
     private javax.swing.JMenuItem jMenuItem9;
     private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JTextArea jTextArea2;
     private javax.swing.JToolBar jToolBar1;
-    private javax.swing.JMenuItem jmenu_binario;
     private javax.swing.JList<String> lista_errores;
     // End of variables declaration//GEN-END:variables
 }
