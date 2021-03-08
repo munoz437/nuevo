@@ -3,6 +3,7 @@ package bloc_notas;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.List;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -11,6 +12,8 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
@@ -21,11 +24,28 @@ import javax.swing.event.DocumentEvent;
 
 
 public class Diseno extends javax.swing.JFrame {
-    //NumeroLinea numeroLinea;
+    
     boolean modificado=false;
     boolean guardando=false;//variable para saber si guardado
     File guardarArchivo;
     DefaultListModel errores=new DefaultListModel();
+    ///COMPILADOR
+    String[]operadores={"=","<",">",";","(",")","{","}","[","]","!",".","+","-"};
+    
+    String[ ] keywords = {"abstract","assert","boolean","break","byte","case","catch","char","class","const","continue",
+        "default","do",	"double","else","enum",	"extends","false","final","finally","float","for",
+        "goto",	"if","implements","import","instanceof","int","interface","long","native","new","null",
+        "package","private","protected","public","return","short","static","strictfp","String","super","switch",
+        "synchronized","this","throw","throws","transient","true","try","void","volatile","while","length","equals","main","out","System","out","println"};
+    // ArrayList<Token> lista_token = new ArrayList();
+     ///////////////////
+    ArrayList<String> token = new ArrayList<String>();
+    int cantidadLineas=0;
+    ArrayList<String> tokenClasificado = new ArrayList<String>();
+    
+    private String[] FUNCIONES = {"==","=","+","-",".","(",")","'","*","[","]",";"};
+    ArrayList<String> listaTokens = new ArrayList<String>();
+    int inicioT=0;//CONTADOR PARA LITERALES
     
     public Diseno() {
         
@@ -58,9 +78,8 @@ public class Diseno extends javax.swing.JFrame {
         btn_abrir = new javax.swing.JButton();
         btn_guardar = new javax.swing.JButton();
         btn_guardarcomo = new javax.swing.JButton();
-        btn_asignacion_variables = new javax.swing.JButton();
-        btn_numeros_reales = new javax.swing.JButton();
-        btn_variableNombre = new javax.swing.JButton();
+        btn_analizador_lexico = new javax.swing.JButton();
+        btn_analizador2 = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         lista_errores = new javax.swing.JList<>();
         jScrollPane3 = new javax.swing.JScrollPane();
@@ -118,8 +137,6 @@ public class Diseno extends javax.swing.JFrame {
         jMenuItem9.setText("jMenuItem9");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setUndecorated(true);
-        setOpacity(0.9F);
         setResizable(false);
         setSize(new java.awt.Dimension(500, 380));
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -133,7 +150,7 @@ public class Diseno extends javax.swing.JFrame {
 
         jTextArea1.setBackground(new java.awt.Color(49, 66, 82));
         jTextArea1.setColumns(20);
-        jTextArea1.setFont(new java.awt.Font("Century Gothic", 0, 24)); // NOI18N
+        jTextArea1.setFont(new java.awt.Font("Century Gothic", 0, 20)); // NOI18N
         jTextArea1.setForeground(new java.awt.Color(255, 255, 255));
         jTextArea1.setRows(5);
         jTextArea1.setComponentPopupMenu(jPopupMenu1);
@@ -144,10 +161,11 @@ public class Diseno extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(jTextArea1);
 
+        jToolBar1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jToolBar1.setRollover(true);
 
-        btn_nuevo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imag/agregar-archivo.png"))); // NOI18N
-        btn_nuevo.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        btn_nuevo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/agregar-archivo.png"))); // NOI18N
+        btn_nuevo.setBorder(javax.swing.BorderFactory.createEmptyBorder(3, 3, 3, 3));
         btn_nuevo.setFocusable(false);
         btn_nuevo.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btn_nuevo.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -158,8 +176,8 @@ public class Diseno extends javax.swing.JFrame {
         });
         jToolBar1.add(btn_nuevo);
 
-        btn_abrir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imag/carpeta.png"))); // NOI18N
-        btn_abrir.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        btn_abrir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/carpeta.png"))); // NOI18N
+        btn_abrir.setBorder(javax.swing.BorderFactory.createEmptyBorder(3, 3, 3, 3));
         btn_abrir.setFocusable(false);
         btn_abrir.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btn_abrir.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -170,8 +188,8 @@ public class Diseno extends javax.swing.JFrame {
         });
         jToolBar1.add(btn_abrir);
 
-        btn_guardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imag/salvar.png"))); // NOI18N
-        btn_guardar.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        btn_guardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/guardar-el-archivo.png"))); // NOI18N
+        btn_guardar.setBorder(javax.swing.BorderFactory.createEmptyBorder(3, 3, 3, 3));
         btn_guardar.setFocusable(false);
         btn_guardar.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btn_guardar.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -182,8 +200,8 @@ public class Diseno extends javax.swing.JFrame {
         });
         jToolBar1.add(btn_guardar);
 
-        btn_guardarcomo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imag/salvar_1.png"))); // NOI18N
-        btn_guardarcomo.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        btn_guardarcomo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/disquete.png"))); // NOI18N
+        btn_guardarcomo.setBorder(javax.swing.BorderFactory.createEmptyBorder(3, 3, 3, 3));
         btn_guardarcomo.setFocusable(false);
         btn_guardarcomo.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btn_guardarcomo.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -194,56 +212,51 @@ public class Diseno extends javax.swing.JFrame {
         });
         jToolBar1.add(btn_guardarcomo);
 
-        btn_asignacion_variables.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imag/boton-de-reproduccion.png"))); // NOI18N
-        btn_asignacion_variables.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btn_asignacion_variables.setFocusable(false);
-        btn_asignacion_variables.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        btn_asignacion_variables.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        btn_asignacion_variables.addActionListener(new java.awt.event.ActionListener() {
+        btn_analizador_lexico.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        btn_analizador_lexico.setText("Analizador Lexico");
+        btn_analizador_lexico.setBorder(javax.swing.BorderFactory.createEmptyBorder(3, 3, 3, 3));
+        btn_analizador_lexico.setFocusable(false);
+        btn_analizador_lexico.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btn_analizador_lexico.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btn_analizador_lexico.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_asignacion_variablesActionPerformed(evt);
+                btn_analizador_lexicoActionPerformed(evt);
             }
         });
-        jToolBar1.add(btn_asignacion_variables);
+        jToolBar1.add(btn_analizador_lexico);
 
-        btn_numeros_reales.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imag/letra-n.png"))); // NOI18N
-        btn_numeros_reales.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btn_numeros_reales.setFocusable(false);
-        btn_numeros_reales.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        btn_numeros_reales.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        btn_numeros_reales.addActionListener(new java.awt.event.ActionListener() {
+        btn_analizador2.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        btn_analizador2.setText("Analizador 2");
+        btn_analizador2.setBorder(javax.swing.BorderFactory.createEmptyBorder(3, 3, 3, 3));
+        btn_analizador2.setFocusable(false);
+        btn_analizador2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btn_analizador2.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btn_analizador2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_numeros_realesActionPerformed(evt);
+                btn_analizador2ActionPerformed(evt);
             }
         });
-        jToolBar1.add(btn_numeros_reales);
-
-        btn_variableNombre.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imag/jugar (1).png"))); // NOI18N
-        btn_variableNombre.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btn_variableNombre.setFocusable(false);
-        btn_variableNombre.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        btn_variableNombre.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        btn_variableNombre.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_variableNombreActionPerformed(evt);
-            }
-        });
-        jToolBar1.add(btn_variableNombre);
+        jToolBar1.add(btn_analizador2);
 
         lista_errores.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jScrollPane2.setViewportView(lista_errores);
 
+        jTextArea2.setBackground(new java.awt.Color(45, 66, 91));
         jTextArea2.setColumns(20);
-        jTextArea2.setFont(new java.awt.Font("Century Gothic", 0, 24)); // NOI18N
+        jTextArea2.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
+        jTextArea2.setForeground(new java.awt.Color(255, 255, 255));
         jTextArea2.setRows(5);
         jScrollPane3.setViewportView(jTextArea2);
 
+        jMenuBar1.setBorder(null);
         jMenuBar1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jMenuBar1.setFont(new java.awt.Font("Century Gothic", 0, 36)); // NOI18N
+        jMenuBar1.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
 
         jMenu1.setText("Archivo");
+        jMenu1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
 
         jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jMenuItem1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imag/agregar-archivo.png"))); // NOI18N
         jMenuItem1.setText("Nuevo");
         jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
@@ -254,6 +267,7 @@ public class Diseno extends javax.swing.JFrame {
         jMenu1.add(jMenuItem1);
 
         jMenuItem2.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem2.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jMenuItem2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imag/archivo.png"))); // NOI18N
         jMenuItem2.setText("Abrir");
         jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
@@ -264,6 +278,7 @@ public class Diseno extends javax.swing.JFrame {
         jMenu1.add(jMenuItem2);
 
         jMenuItem3.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_G, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem3.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jMenuItem3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imag/salvar.png"))); // NOI18N
         jMenuItem3.setText("Guardar");
         jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
@@ -274,6 +289,7 @@ public class Diseno extends javax.swing.JFrame {
         jMenu1.add(jMenuItem3);
 
         jMenuItem10.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem10.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jMenuItem10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imag/salvar_1.png"))); // NOI18N
         jMenuItem10.setText("Guardar Como");
         jMenuItem10.addActionListener(new java.awt.event.ActionListener() {
@@ -284,6 +300,7 @@ public class Diseno extends javax.swing.JFrame {
         jMenu1.add(jMenuItem10);
 
         jMenuItem4.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_W, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem4.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jMenuItem4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imag/cerrar.png"))); // NOI18N
         jMenuItem4.setText("Salir");
         jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
@@ -302,19 +319,19 @@ public class Diseno extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 1309, Short.MAX_VALUE)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 1567, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jScrollPane1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 653, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 676, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane3))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, 27, Short.MAX_VALUE)
+                .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 372, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE)
                     .addComponent(jScrollPane3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -466,6 +483,8 @@ public void nuevo(){
     try{
             if(modificado==false){//TEXTO NO MODIFICADO   
                 jTextArea1.setText("");
+                jTextArea2.setText("");
+               //lista_token.clear();
                 guardarArchivo=null;
             }else{//TEXTO SI MODIFICADO
             
@@ -476,11 +495,17 @@ public void nuevo(){
                     //System.out.println("SIIIII");
                     gArchivo();
                     jTextArea1.setText("");//LIMPIRA EL JTEXTAREA1
+                    jTextArea2.setText("");//LIMPIRA EL JTEXTAREA2
+                    //lista_token.clear();
+                    
                     modificado=false;//VARIABLE PARA SABER SI MODICADO
                     guardarArchivo=null;
                 }else if(i==1){//BOTON NO
                     //System.out.println("NOOO");
                     jTextArea1.setText("");//LIMPIRA EL JTEXTAREA1
+                    jTextArea2.setText("");//LIMPIRA EL JTEXTAREA2
+                    //lista_token.clear();
+                    
                     modificado=false;//VARIABLE PARA SABER SI MODICADO
                     guardarArchivo=null;
                 }else{
@@ -620,103 +645,230 @@ public void nuevo(){
                 }
         }
     }//GEN-LAST:event_btnc_salirActionPerformed
-
-    private void btn_asignacion_variablesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_asignacion_variablesActionPerformed
+///ANALIZADOR LÉXICO
+    private void btn_analizador_lexicoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_analizador_lexicoActionPerformed
        int todo=lista_errores.getSelectedIndex();//Limpia la lista
-        errores.removeAllElements();//Limpia la lista
-        // AUTOMATA ASIGNACION DE VARIABLES11111
-        
-        String texto=jTextArea1.getText();
+       errores.removeAllElements();//Limpia la lista 
        
-        //texto=texto.replaceAll(";","");//QUITA LOS ;
-        
-        String[] partes=texto.split("\n");
-        
+       String texto=jTextArea1.getText();//OBTIENE EL TEXTO
+       String[] partes=texto.split("\n");
+       cantidadLineas=partes.length;//CANTIDAD DE LINEAS
         
         for (int i = 0;i<partes.length; i++) {
             
-            texto=partes[i].replaceAll("\\s","");//QUITA LOS ESPACIOS
-            //texto=texto.replaceFirst("=","");//QUITA LOS IGUALES
-            run(texto,i+1);
+            texto=partes[i].trim();//QUITA LOS ESPACIOS     
+            //lexico(texto,i+1);
+           /// separaFunciones(texto);
+           analizador(texto,i+1);
         }
-    }//GEN-LAST:event_btn_asignacion_variablesActionPerformed
+ 
+    }//GEN-LAST:event_btn_analizador_lexicoActionPerformed
     
-    public void run(String texto,int linea){
-         // AUTOMATA 1
-        int Estado=1,n=0;
-        //String texto=jTextArea1.getText();
-        //texto=texto.replaceAll("\\s","");//QUITA LOS ESPACIOS
-        
+    public void analizador(String texto,int linea){
+        String lexema = "";
+        ///CONVIERTE A CADENA EL STRING
         char cadena[];
         cadena=texto.toCharArray();
-        while(n<cadena.length){//RECORRE LA CADENA HASTA EL FINAL
-            switch(Estado){
-                case 1:             
-                    if(Character.isLetter(cadena[n])){//INDICA SI ES UNA CADENA
-                        Estado=2;
-                    }
-                    else if(cadena[n]==':'){
-                        Estado=3;
-                    }
-                    else if(Character.isDigit(cadena[n])){//INDICA SI ES UN DIGITO
-                        Estado=5;
-                    }
-                    else{
-                        errores.addElement("Linea "+linea+" Se econtro un Error 1: "+cadena[n]);
-                        return;//SALE DEL CICLO WHILE
-                    }
-                    break;
-                case 2: 
-                    if(Character.isLetter(cadena[n])){
-                        Estado=2;
-                    }
-                    else if(Character.isDigit(cadena[n])){
-                        Estado=2;
-                    }
-                    else{
-                        errores.addElement("Linea "+linea+" Se econtro un Error 2: "+cadena[n]);
-                        return;
-                    }
-                    break;
-                case 3:
-                    if(cadena[n]=='='){
-                        Estado=4;
-                    }
-                    //if(cadena[n]!='='){
-                    else{
-                        errores.addElement("Linea "+linea+" Se econtro un Error 3: "+cadena[n]);  
-                        return;
-                    }
-                     
-                    break;
-                case 4:
-                    if(cadena[n]!=' '){
-                        errores.addElement("Linea "+linea+" Se econtro un Error 4: "+cadena[n]);
-                        return;
-                    }      
-                    break;
-                case 5:
-                    if(!Character.isDigit(cadena[n])){
-                        errores.addElement("Linea "+linea+" Se econtro un Error 5: "+cadena[n]);
-                        return;
-                    }
-                    break;
-            }///FIN CASE
-        n++;//CONTADOR
-        }///FIN WHILE
+       
+        if(cadena[0]=='/' && cadena[1]=='/'){
+            token.add(texto);
+        }else{
+                
+            for (int i = 0; i <cadena.length; i++) {
 
-        if(Estado==1){
+
+                if (cadena[i]=='\"') {
+                   inicioT++;                
+                }
+
+
+                if(inicioT==1){
+
+                    lexema=lexema+Character.toString(cadena[i]);
+
+                }else if(inicioT==2){
+
+                    lexema=lexema+Character.toString(cadena[i]);
+                    token.add(lexema);
+                    lexema="";
+                    inicioT=0;
+
+
+                }else{
+
+                    if (Character.isLetterOrDigit(cadena[i])) {
+                    //System.out.println(cadena[i]);
+                    lexema=lexema+Character.toString(cadena[i]);
+
+                    }else if(cadena[i]==' '){
+                        token.add(lexema);
+                        lexema="";
+                    }else if (existeEnArreglo(operadores,Character.toString(cadena[i]))!=-1) {
+                        token.add(lexema);
+                        lexema=Character.toString(cadena[i]);
+                        token.add(lexema);
+                        lexema="";
+                    }            
+                }                             
+            }
+        }   
         
-            errores.addElement("Linea "+linea+" Se econtro un Error: "+cadena[n]);
-                        
-           return;
+        for (int i = 0; i < token.size();i++) {
+            clasificarToken(token.get(i)); 
         }
-        if(Estado==3){
+         
+        mostrarTokens();
+        jTextArea2.setText(jTextArea2.getText() +"\n");
+        tokenClasificado.clear();
+        token.clear();
         
-            errores.addElement("Linea "+linea+" Se econtro un Error: "+cadena[n]);
+    }
+
+
+    
+    
+    
+    
+   
+    public void clasificarToken(String token){
+        
+        
+        if (existeEnArreglo(keywords,token)!=-1) {///CLASIFICAR PALABRAS RESERVADAS
+            //System.out.println("PR["+token+"],");
+            tokenClasificado.add("PR["+token+"]");
+        }else{
+            if (existeEnArreglo(operadores,token)!=-1) {//CLASIFICA OPERADORES
+                //System.out.println("OP["+token+"],");
+                tokenClasificado.add("OP["+token+"]");
+
+            }else{
+                
+                if (isNumerico(token)) {//CLASIFICAR NUMEROS
+                    //System.out.println("NUM["+token+"],");
+                    tokenClasificado.add("NUM["+token+"]");
+                }else{
+                    if(!token.equals(" ")){//DIFERENTE DE VACIO   
+                       if(!token.isEmpty()){
+                            char cadena[];
+                            cadena=token.toCharArray();
+                            if(cadena[0]=='\"'){
+                                tokenClasificado.add("LT["+token+"]");
+                            }else if(cadena[0]=='/' && cadena[1]=='/'){
+                                tokenClasificado.add("COM["+token+"]");
+                            }else{
+                                tokenClasificado.add("ID["+token+"]");
+                            }
+                           
+                       }
                         
-           return;
+                    }
+                    
+                }
+
+            }
+            
         }
+       
+    }
+    
+    public void mostrarTokens(){    
+            for (int j = 0; j < tokenClasificado.size(); j++) {
+                jTextArea2.setText(jTextArea2.getText() + tokenClasificado.get(j) +" , ");
+            }   
+    }
+    
+    public static int existeEnArreglo(String[] arreglo, String busqueda) {
+        for (int x = 0; x < arreglo.length; x++) {
+          if (arreglo[x].equals(busqueda)) {
+            return x;
+          }
+        }
+        return -1;
+    }
+    
+    public  boolean isNumerico(String cadena){
+	try {
+		Integer.parseInt(cadena);
+		return true;
+	} catch (Exception e){
+		return false;
+	}
+    }
+    
+           
+//        for (int i = 0; i < token.size();i++) {
+//           
+//            //System.out.println(token.get(i));
+//            clasificarToken(token.get(i));
+//        
+//        }
+    
+    ///////////////////////////////////////////////////////////////////////////
+    public void separaFunciones(String sentencia) {
+        for (String funcion : FUNCIONES) {
+            if (sentencia.contains(funcion)) {
+                sentencia = sentencia.replace(funcion, " " + funcion + " ");
+            }
+        }
+        String[] tokens = sentencia.replaceAll("\\s+", " ").trim().split(" ");
+        for (int i = 0; i <tokens.length; i++) {
+             token.add(tokens[i]);
+            // System.out.println(tokens[i]);
+        }
+        
+        
+        for (int i = 0; i < token.size();i++) {
+            clasificarToken(token.get(i)); 
+        }
+         
+        mostrarTokens();
+        jTextArea2.setText(jTextArea2.getText() +"\n");
+        tokenClasificado.clear();
+        token.clear();
+       
+    }
+    ///////////////////////////////////////////////////////////////////////////
+    
+    
+    //    public void escanea(String codigo) {
+//        for (String sentencia : codigo.split("\n")) {
+//            separaFunciones(sentencia);
+//        }
+//        for (String tokens : listaTokens) {
+//            for (String token1 : tokens) {
+//                System.out.print("[" + token1 + "]");
+//            }
+//            System.out.println("");
+//        }
+//    }
+    
+    
+     public void lexico(String texto,int linea){
+        
+        ///CONVIERTE A CADENA EL STRING
+        char cadena[];
+        cadena=texto.toCharArray();
+        
+        StringTokenizer st = new StringTokenizer(texto,"=;(){}[].+-< ",true);
+        //System.out.println("Hay un total de: "+st.countTokens()+" tokens.");
+        while (st.hasMoreTokens()) { ///OBTIENE LOS TOKENS
+           token.add(st.nextToken());
+              
+        }
+        
+        
+        //jTextArea2.setText(jTextArea2.getText() + token.get(i) +"\n");
+        //jTextArea2.setText(token.get(i) +"\n");
+        
+        for (int i = 0; i < token.size();i++) {
+            clasificarToken(token.get(i)); 
+        }
+         
+        mostrarTokens();
+        jTextArea2.setText(jTextArea2.getText() +"\n");
+        tokenClasificado.clear();
+        token.clear();
+        
     }
     
     private void btn_guardarcomoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_guardarcomoActionPerformed
@@ -733,39 +885,27 @@ public void nuevo(){
     
     
     
-    private void btn_numeros_realesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_numeros_realesActionPerformed
-        int todo=lista_errores.getSelectedIndex();//Limpia la lista
-        errores.removeAllElements();//Limpia la lista
-        // AUTOMATA NUMERO REAL
-        
-        String texto=jTextArea1.getText();
-        String[] partes=texto.split("\n");
-        
-        for (int i = 0;i<partes.length; i++) {
-            
-            texto=partes[i].replaceAll("\\s","");//QUITA LOS ESPACIOS
-            //errores.addElement("Partes"+partes[i]);
-            NumeroReal(texto,i+1);
-        }
-    }//GEN-LAST:event_btn_numeros_realesActionPerformed
-
-    private void btn_variableNombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_variableNombreActionPerformed
-        // TERCER AUTOMATA
-        int todo=lista_errores.getSelectedIndex();//Limpia la lista
-        errores.removeAllElements();//Limpia la lista
-        // AUTOMATA ASIGNACION VARIABLE
-        
-        String texto=jTextArea1.getText();
-        String[] partes=texto.split("\n");
-        
-        for (int i = 0;i<partes.length; i++) {
-            
-            texto=partes[i].replaceAll("\\s","");//QUITA LOS ESPACIOS
-            //errores.addElement("Partes"+partes[i]);
-            AsignacionVariable(texto,i+1);
-        }
-        
-    }//GEN-LAST:event_btn_variableNombreActionPerformed
+    private void btn_analizador2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_analizador2ActionPerformed
+//        int todo=lista_errores.getSelectedIndex();//Limpia la lista
+//        errores.removeAllElements();//Limpia la lista
+//        // AUTOMATA NUMERO REAL
+//        
+//        String texto=jTextArea1.getText();
+//        String[] partes=texto.split("\n");
+//        
+//        for (int i = 0;i<partes.length; i++) {
+//            
+//            texto=partes[i].replaceAll("\\s","");//QUITA LOS ESPACIOS
+//            //errores.addElement("Partes"+partes[i]);
+//            //NumeroReal(texto,i+1);
+//        }
+//new analizador(lista_token).analizar(jTextArea1.getText());
+//        
+//        for(int i = 0; i < lista_token.size(); i++){
+//            /*txt_consola.setText(txt_consola.getText() + '\n' + lista_token.get(i).toString());*/
+//            jTextArea2.setText(jTextArea2.getText() + lista_token.get(i).toString());
+//        }
+    }//GEN-LAST:event_btn_analizador2ActionPerformed
 
     private void jMenuItem10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem10ActionPerformed
         
@@ -776,394 +916,7 @@ public void nuevo(){
             System.out.println("Error al guardar boton");
         }
     }//GEN-LAST:event_jMenuItem10ActionPerformed
-    
-    public void binario(String texto,int linea){
-        int Estado=0,n=0;
-        char cadena[];
-        cadena=texto.toCharArray();
-       
-        
-        while(n<cadena.length){//RECORRE LA CADENA HASTA EL FINAL
-            switch(Estado){
-                case 0:
-                    if(cadena[n]=='0'){
-                        Estado=1;
-                    }
-                    else if(cadena[n]=='1'){
-                        Estado=3;
-                    }                   
-                    else{
-                        errores.addElement("Linea "+linea+" Se econtro un Error : "+cadena[n]);
-                        return;//SALE DEL CICLO WHILE
-                    }
-                break;
-                 case 1:
-                    if(cadena[n]=='0'){
-                        Estado=2;
-                    }
-                    else if(cadena[n]=='1'){
-                        Estado=3;
-                    } 
-                    else{
-                        errores.addElement("Linea "+linea+" Se econtro un Error 1: "+cadena[n]);
-                        return;//SALE DEL CICLO WHILE
-                    }
-                break;
-                case 2:
-                    if(cadena[n]=='1'){
-                        Estado=2;
-                    } 
-                    else if(cadena[n]=='0'){
-                        Estado=2;
-      
-                    }
-                    else{
-                        errores.addElement("Linea "+linea+" Se econtro un Error 2: "+cadena[n]);
-                        return;//SALE DEL CICLO WHILE
-                    }
-                break;
-                case 3:
-                    if(cadena[n]=='1'){
-                        Estado=3;
-                    }
-                    else if(cadena[n]=='0'){
-                        Estado=3;
-                    } 
-                    else{
-                        errores.addElement("Linea "+linea+" Se econtro un Error 3: "+cadena[n]);
-                        return;//SALE DEL CICLO WHILE
-                    }
-                break;
-               
-               
-                     
-            }//switch
-            n++;//CONTADOR           
-        }//while
-        
-        if(Estado!=3 && Estado!=1){
-            errores.addElement("Linea "+linea+" Se econtro un Error en: "+texto);
-             return;
-        }
-    }//TERMINA FUNCION BINARIO
-    
-    
-    public void numeros_racionales(String texto,int linea){
-        int Estado=1,n=0;
-        char cadena[];
-        cadena=texto.toCharArray();
-       
-        
-        while(n<cadena.length){//RECORRE LA CADENA HASTA EL FINAL
-            switch(Estado){
-                case 1:
-                    if(cadena[n]=='+'){
-                        Estado=2;
-                    }
-                    else if(cadena[n]=='-'){
-                        Estado=2;
-                    }
-                    else if(Character.isDigit(cadena[n])){
-                        Estado=3;
-                    }
-                    else{
-                        errores.addElement("Linea "+linea+" Se econtro un Error 1: "+cadena[n]);
-                        return;//SALE DEL CICLO WHILE
-                    }
-                break;
-                 case 2:
-                    if(Character.isDigit(cadena[n])){
-                        Estado=3;
-                    }
-                    else{
-                        errores.addElement("Linea "+linea+" Se econtro un Error 2: "+cadena[n]);
-                        return;//SALE DEL CICLO WHILE
-                    }
-                break;
-                case 3:
-                    if(Character.isDigit(cadena[n])){
-                        Estado=3;
-                    }
-                    else if(cadena[n]=='.'){
-                        Estado=4;
-      
-                    }
-                    else{
-                        errores.addElement("Linea "+linea+" Se econtro un Error 3: "+cadena[n]);
-                        return;//SALE DEL CICLO WHILE
-                    }
-                break;
-                case 4:
-                   if(Character.isDigit(cadena[n])){
-                        Estado=5;
-                    }else{
-                        errores.addElement("Linea "+linea+" Se econtro un Error 2: "+cadena[n]);
-                        return;//SALE DEL CICLO WHILE
-                    }
-                break;
-                case 5:
-                   if(Character.isDigit(cadena[n])){
-                        Estado=5;
-                    }else{
-                        errores.addElement("Linea "+linea+" Se econtro un Error 2: "+cadena[n]);
-                        return;
-                    }
-                break;
-               
-                     
-            }//switch
-            n++;//CONTADOR           
-        }//while
-        
-        if(Estado!=5){
-            errores.addElement("Linea "+linea+" Se econtro un Error en: "+texto);
-             return;
-        }
-        
-        
-    }//TERMINA FUNCION NUMERO RACIONALES
-    public void SegundoParcial(String texto,int linea){
-        int Estado=1,n=0;
    
-        char cadena[];
-        cadena=texto.toCharArray();
-       
-        
-        while(n<cadena.length){//RECORRE LA CADENA HASTA EL FINAL
-            switch(Estado){
-                case 1:
-                    if(cadena[n]=='&'){//INDICA SI ES &
-                        Estado=2;
-                    }    
-                    else{
-                        errores.addElement("Linea "+linea+" Se econtro un Error 1: "+cadena[n]);
-                        return;//SALE DEL CICLO WHILE
-                    }
-                break;
-                 case 2:
-                    if(cadena[n]=='_'){//INDICA SI ES UNA CADENA
-                        Estado=3;
-                    }
-                    else if(Character.isLetter(cadena[n])){//INDICA SI ES UNA CADENA
-                        Estado=3;
-                    }
-                    
-                    else{
-                        errores.addElement("Linea "+linea+" Se econtro un Error 2: "+cadena[n]);
-                        return;//SALE DEL CICLO WHILE
-                    }
-                break;
-                case 3:
-                    if(Character.isLetter(cadena[n])){//INDICA SI ES UNA CADENA
-                        Estado=4;
-                    }
-                    else if(Character.isDigit(cadena[n])){//INDICA SI ES UN DIGITO
-                        Estado=4;
-                        
-                        
-                    }
-                    else{
-                        errores.addElement("Linea "+linea+" Se econtro un Error 3: "+cadena[n]);
-                        return;//SALE DEL CICLO WHILE
-                    }
-                break;
-                case 4:
-                    if(cadena[n]=='_'){//INDICA SI ES UNA CADENA
-                        Estado=4;
-                    }
-                    else if(Character.isLetter(cadena[n])){//INDICA SI ES UNA CADENA
-                        Estado=4;
-                    }
-                    else if(Character.isDigit(cadena[n])){//INDICA SI ES UN DIGITO
-                        Estado=4;
-                    }
-                    
-      
-                    else{
-                        errores.addElement("Linea "+linea+" Se econtro un Error 2: "+cadena[n]);
-                        return;//SALE DEL CICLO WHILE
-                    }
-                break;
-               
-                     
-            }//switch
-            n++;//CONTADOR           
-        }//while
-        
-        if(Estado!=4){
-            errores.addElement("Linea "+linea+" Se econtro un Error "+texto);
-             return;//SALE DEL CICLO WHILE
-        }
-        
-    }//TERMINA FUNCION SEGUNDO PARCIAL
-    
-    public void AsignacionVariable(String texto,int linea){
-        int Estado=1,n=0;
-   
-        char cadena[];
-        cadena=texto.toCharArray();
-       
-        
-        while(n<cadena.length){//RECORRE LA CADENA HASTA EL FINAL
-            switch(Estado){
-                case 1:
-                    if(Character.isLetter(cadena[n])){//INDICA SI ES UNA CADENA
-                        Estado=3;
-                    }
-                    else if(Character.isDigit(cadena[n])){//INDICA SI ES UN DIGITO
-                        Estado=2;
-                        errores.addElement("Linea "+linea+" Se econtro un Error 2: "+cadena[n]);
-                    
-                        
-                    }
-                    else{
-                        errores.addElement("Linea "+linea+" Se econtro un Error 1: "+cadena[n]);
-                        return;//SALE DEL CICLO WHILE
-                    }
-                break;
-               case 2:
-                   //errores.addElement("Linea "+linea+" Se econtro un Error 2: "+cadena[n]);
-                    
-                    if(true){
-                        
-                    return;//SALE DEL CICLO WHILE
-                        
-                    }
-                    
-
-                break;
-                case 3:
-                    if(Character.isLetter(cadena[n])){//INDICA SI ES UNA CADENA
-                        Estado=3;
-                    }
-                    else if(Character.isDigit(cadena[n])){//INDICA SI ES UN DIGITO
-                        Estado=3;
-                    }
-                    else{
-                        errores.addElement("Linea "+linea+" Se econtro un Error 3: "+cadena[n]);
-                        return;//SALE DEL CICLO WHILE
-                    }
-                break;      
-            }//switch
-            n++;//CONTADOR           
-        }//while
-        
-        if(Estado!=3){
-            errores.addElement(" Se econtro un Error ");
-             return;//SALE DEL CICLO WHILE
-        }
-    }//TERMINA EL TERCER AUTOMATA
-    
- 
-    
-    public void NumeroReal(String texto,int linea){
-        int Estado=1,n=0;
-   
-        char cadena[];
-        cadena=texto.toCharArray();
-       
-        
-        while(n<cadena.length){//RECORRE LA CADENA HASTA EL FINAL
-            switch(Estado){
-                case 1:
-                    if(Character.isDigit(cadena[n])){//INDICA SI ES UN DIGITO
-                        Estado=2;
-                    }
-                    else{
-                        errores.addElement("Linea "+linea+" Se econtro un Error 1: "+cadena[n]);
-                        return;//SALE DEL CICLO WHILE
-                    }
-                break;
-                case 2:
-                    if(Character.isDigit(cadena[n])){//INDICA SI ES UN DIGITO
-                        Estado=2;
-                    }
-                    else if(cadena[n]=='E')
-                    {
-                        Estado=5;
-                    }
-                    else if(cadena[n]=='.')
-                    {
-                        Estado=3;
-                    }
-                    
-                    else{
-                        errores.addElement("Linea "+linea+" Se econtro un Error 2: "+cadena[n]);
-                        return;//SALE DEL CICLO WHILE
-                    }
-                break;
-                case 3:
-                    if(Character.isDigit(cadena[n])){//INDICA SI ES UN DIGITO
-                        Estado=4;
-                    }
-                    else{
-                        errores.addElement("Linea "+linea+" Se econtro un Error 3: "+cadena[n]);
-                        return;//SALE DEL CICLO WHILE
-                    }
-                break;
-                case 4:
-                    if(Character.isDigit(cadena[n])){//INDICA SI ES UN DIGITO
-                        Estado=4;
-                    }
-                    else if(cadena[n]=='E'){
-                        Estado=5;
-                    }
-                    else{
-                        errores.addElement("Linea "+linea+" Se econtro un Error 4: "+cadena[n]);
-                        return;//SALE DEL CICLO WHILE
-                    }
-                break;
-                case 5:
-                    if(cadena[n]=='+'){
-                        Estado=6;
-                    }
-                    else if(cadena[n]=='-'){
-                        Estado=6;
-                    }
-                    else if(Character.isDigit(cadena[n])){//INDICA SI ES UN DIGITO
-                        Estado=7;
-                    }
-                    else{
-                        errores.addElement("Linea "+linea+" Se econtro un Error 5: "+cadena[n]);
-                        return;//SALE DEL CICLO WHILE
-                    }
-                break;
-                case 6:
-                    if(Character.isDigit(cadena[n])){//INDICA SI ES UN DIGITO
-                        Estado=7;
-                    }
-                    else{
-                        errores.addElement("Linea "+linea+" Se econtro un Error 6: "+cadena[n]);
-                        return;//SALE DEL CICLO WHILE
-                    }
-                break;
-                case 7:
-                    if(Character.isDigit(cadena[n])){//INDICA SI ES UN DIGITO
-                        Estado=7;
-                    }
-                    else{
-                        errores.addElement("Linea "+linea+" Se econtro un Error 7: "+cadena[n]);
-                        return;//SALE DEL CICLO WHILE
-                    }
-                break;
-                
-                
-            }//switch
-            
-            n++;//CONTADOR           
-        }//while
-        
-        if(Estado!=7 && Estado!=4){
-            errores.addElement("Linea "+linea+" Se econtro un Error en: "+texto);
-                       
-        }
-        
-        
-        
-    }//TERMINA LA FUNCION NREAL
-    
-    
-    
     
     
     
@@ -1201,12 +954,11 @@ public void nuevo(){
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_abrir;
-    private javax.swing.JButton btn_asignacion_variables;
+    private javax.swing.JButton btn_analizador2;
+    private javax.swing.JButton btn_analizador_lexico;
     private javax.swing.JButton btn_guardar;
     private javax.swing.JButton btn_guardarcomo;
     private javax.swing.JButton btn_nuevo;
-    private javax.swing.JButton btn_numeros_reales;
-    private javax.swing.JButton btn_variableNombre;
     private javax.swing.JMenuItem btnc_abrir;
     private javax.swing.JMenuItem btnc_guardar;
     private javax.swing.JMenuItem btnc_nuevo;
